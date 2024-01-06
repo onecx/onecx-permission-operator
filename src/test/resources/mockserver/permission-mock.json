@@ -18,15 +18,5 @@
     "httpResponse": {
       "statusCode": 500
     }
-  },
-  {
-    "id": "5",
-    "httpRequest": {
-      "method" : "PUT",
-      "path": "/operator/v1/update/test-error-2"
-    },
-    "httpResponse": {
-      "statusCode": 400
-    }
   }
 ]
