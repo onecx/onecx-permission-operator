@@ -3,7 +3,8 @@ package io.github.onecx.permission.operator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.inject.Inject;
 
@@ -33,16 +34,12 @@ class PermissionControllerResponseTest extends AbstractTest {
 
     @Test
     void testWrongResponse() throws Exception {
-
-        var p1 = new PermissionSpec.PermissionItemSpec();
-        p1.setName("n2");
-        p1.setAction("a2");
-        p1.setDescription("d1");
-        p1.setResource("r1");
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        p1.put("r1", Map.of("a2", "d1"));
 
         var s = new PermissionSpec();
         s.setAppId("test-3");
-        s.setPermissions(List.of(p1));
+        s.setPermissions(p1);
 
         Permission m = new Permission();
         m.setSpec(s);

@@ -2,9 +2,11 @@ package io.github.onecx.permission.operator;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.catchThrowableOfType;
 import static org.awaitility.Awaitility.await;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.inject.Inject;
 
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.github.onecx.permission.test.AbstractTest;
 import io.javaoperatorsdk.operator.Operator;
 import io.quarkus.test.junit.QuarkusTest;
@@ -85,15 +88,12 @@ class PermissionControllerTest extends AbstractTest {
 
         operator.start();
 
-        var p1 = new PermissionSpec.PermissionItemSpec();
-        p1.setName("n2");
-        p1.setAction("a2");
-        p1.setDescription("d1");
-        p1.setResource("r1");
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        p1.put("r1", Map.of("a2", "d1"));
 
         var m = new PermissionSpec();
         m.setAppId("test-3");
-        m.setPermissions(List.of(p1));
+        m.setPermissions(p1);
 
         var data = new Permission();
         data
@@ -125,19 +125,41 @@ class PermissionControllerTest extends AbstractTest {
     }
 
     @Test
+    void productUpdateNoDescriptionTest() {
+
+        operator.start();
+
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        var a = new HashMap<String, String>();
+        a.put("a2", null);
+        p1.put("r1", a);
+
+        var m = new PermissionSpec();
+        m.setAppId("test-3");
+        m.setPermissions(p1);
+
+        var data = new Permission();
+        data
+                .setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
+        data.setSpec(m);
+
+        log.info("Creating test permission object: {}", data);
+        var exception = catchThrowableOfType(() -> client.resource(data).serverSideApply(), KubernetesClientException.class);
+        assertThat(exception).isNotNull();
+
+    }
+
+    @Test
     void productRestClientExceptionTest() {
 
         operator.start();
 
-        var p1 = new PermissionSpec.PermissionItemSpec();
-        p1.setName("n2");
-        p1.setAction("a2");
-        p1.setDescription("d1");
-        p1.setResource("r1");
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        p1.put("r1", Map.of("a2", "d1"));
 
         var m = new PermissionSpec();
         m.setAppId("test-error-1");
-        m.setPermissions(List.of(p1));
+        m.setPermissions(p1);
 
         var data = new Permission();
         data
