@@ -1,5 +1,5 @@
 app:
-  name: product-operator
+  name: operator
   image:
     repository: "onecx/onecx-permission-operator"
   env:
