@@ -1,4 +1,4 @@
-package io.github.onecx.permission.operator;
+package org.tkit.onecx.permission.operator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
