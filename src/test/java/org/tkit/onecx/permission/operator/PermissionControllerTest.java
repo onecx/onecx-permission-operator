@@ -136,6 +136,8 @@ class PermissionControllerTest extends AbstractTest {
 
         var m = new PermissionSpec();
         m.setAppId("test-3");
+        m.setName("test-3");
+        m.setDescription("description");
         m.setPermissions(p1);
 
         var data = new Permission();
