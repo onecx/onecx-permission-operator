@@ -1,14 +1,14 @@
-package io.github.onecx.permission.operator.client.mappers;
+package org.tkit.onecx.permission.operator.client.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.mapstruct.Mapper;
+import org.tkit.onecx.permission.operator.PermissionSpec;
 
-import gen.io.github.onecx.permission.operator.v1.model.Permission;
-import gen.io.github.onecx.permission.operator.v1.model.PermissionRequest;
-import io.github.onecx.permission.operator.PermissionSpec;
+import gen.org.tkit.onecx.permission.operator.v1.model.Permission;
+import gen.org.tkit.onecx.permission.operator.v1.model.PermissionRequest;
 
 @Mapper
 public interface PermissionClientMapper {

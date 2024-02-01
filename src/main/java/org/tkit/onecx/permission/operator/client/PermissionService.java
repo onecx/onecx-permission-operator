@@ -1,4 +1,4 @@
-package io.github.onecx.permission.operator.client;
+package org.tkit.onecx.permission.operator.client;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -6,10 +6,10 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tkit.onecx.permission.operator.Permission;
+import org.tkit.onecx.permission.operator.client.mappers.PermissionClientMapper;
 
-import gen.io.github.onecx.permission.operator.v1.api.PermissionOperatorApi;
-import io.github.onecx.permission.operator.Permission;
-import io.github.onecx.permission.operator.client.mappers.PermissionClientMapper;
+import gen.org.tkit.onecx.permission.operator.v1.api.PermissionOperatorApi;
 
 @ApplicationScoped
 public class PermissionService {

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.github.onecx</groupId>
+        <groupId>org.tkit.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>0.26.0</version>
+        <version>0.31.0</version>
     </parent>
 
     <artifactId>onecx-permission-operator</artifactId>
@@ -62,7 +62,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc-client-reactive-filter</artifactId>
+        </dependency>
+        
         <!-- OTHER -->
         <dependency>
             <groupId>org.mapstruct</groupId>

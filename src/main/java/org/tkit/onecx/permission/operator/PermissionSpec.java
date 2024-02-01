@@ -1,4 +1,4 @@
-package io.github.onecx.permission.operator;
+package org.tkit.onecx.permission.operator;
 
 import java.util.Map;
 
@@ -11,6 +11,12 @@ public class PermissionSpec {
     @JsonProperty(value = "appId", required = true)
     private String appId;
 
+    @JsonProperty(value = "name", required = true)
+    private String name;
+
+    @JsonProperty(value = "description", required = true)
+    private String description;
+
     @JsonProperty("permissions")
     private Map<String, Map<String, String>> permissions;
 
@@ -20,6 +26,22 @@ public class PermissionSpec {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Map<String, Map<String, String>> getPermissions() {

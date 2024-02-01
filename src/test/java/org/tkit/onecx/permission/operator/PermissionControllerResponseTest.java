@@ -1,4 +1,4 @@
-package io.github.onecx.permission.operator;
+package org.tkit.onecx.permission.operator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,9 +11,9 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.tkit.onecx.permission.operator.client.PermissionService;
+import org.tkit.onecx.permission.test.AbstractTest;
 
-import io.github.onecx.permission.operator.client.PermissionService;
-import io.github.onecx.permission.test.AbstractTest;
 import io.javaoperatorsdk.operator.api.reconciler.UpdateControl;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
