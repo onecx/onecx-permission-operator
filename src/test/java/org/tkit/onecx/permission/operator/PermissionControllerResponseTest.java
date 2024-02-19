@@ -38,6 +38,7 @@ class PermissionControllerResponseTest extends AbstractTest {
         p1.put("r1", Map.of("a2", "d1"));
 
         var s = new PermissionSpec();
+        s.setProductName("test1");
         s.setAppId("test-3");
         s.setPermissions(p1);
 

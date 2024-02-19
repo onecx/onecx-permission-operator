@@ -11,6 +11,9 @@ public class PermissionSpec {
     @JsonProperty(value = "appId", required = true)
     private String appId;
 
+    @JsonProperty(value = "productName", required = true)
+    private String productName;
+
     @JsonProperty(value = "name", required = true)
     private String name;
 
@@ -19,6 +22,14 @@ public class PermissionSpec {
 
     @JsonProperty("permissions")
     private Map<String, Map<String, String>> permissions;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getAppId() {
         return appId;
