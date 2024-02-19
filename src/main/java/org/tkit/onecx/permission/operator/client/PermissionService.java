@@ -26,7 +26,7 @@ public class PermissionService {
     public int updatePermission(Permission permission) {
         var spec = permission.getSpec();
         var dto = mapper.map(spec);
-        try (var response = client.createOrUpdatePermission(spec.getAppId(), dto)) {
+        try (var response = client.createOrUpdatePermission(spec.getProductName(), spec.getAppId(), dto)) {
             log.info("Update permission appId {} status {}", spec.getAppId(), response.getStatus());
             return response.getStatus();
         }
