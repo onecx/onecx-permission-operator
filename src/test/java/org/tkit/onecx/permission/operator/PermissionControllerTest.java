@@ -92,6 +92,7 @@ class PermissionControllerTest extends AbstractTest {
         p1.put("r1", Map.of("a2", "d1"));
 
         var m = new PermissionSpec();
+        m.setProductName("test1");
         m.setAppId("test-3");
         m.setPermissions(p1);
 
@@ -135,6 +136,7 @@ class PermissionControllerTest extends AbstractTest {
         p1.put("r1", a);
 
         var m = new PermissionSpec();
+        m.setProductName("test1");
         m.setAppId("test-3");
         m.setName("test-3");
         m.setDescription("description");
@@ -160,6 +162,7 @@ class PermissionControllerTest extends AbstractTest {
         p1.put("r1", Map.of("a2", "d1"));
 
         var m = new PermissionSpec();
+        m.setProductName("test1");
         m.setAppId("test-error-1");
         m.setPermissions(p1);
 
