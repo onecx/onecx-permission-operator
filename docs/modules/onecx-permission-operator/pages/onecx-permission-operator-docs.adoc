@@ -10,11 +10,15 @@ include::onecx-permission-operator-attributes.adoc[opts=optional]
 ----
 quarkus.kubernetes-client.devservices.override-kubeconfig=true
 %prod.quarkus.rest-client.permission_client.url=http://onecx-permission-svc:8080
+%prod.quarkus.rest-client.permission_client.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+quarkus.operator-sdk.crd.validate=false
 quarkus.operator-sdk.helm.enabled=true
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
 quarkus.openapi-generator.codegen.spec.onecx_permission_operator_v1_yaml.config-key=permission_client
 quarkus.openapi-generator.codegen.spec.onecx_permission_operator_v1_yaml.base-package=gen.org.tkit.onecx.permission.operator.v1
 quarkus.openapi-generator.codegen.spec.onecx_permission_operator_v1_yaml.return-response=true
+quarkus.openapi-generator.codegen.spec.onecx_permission_operator_v1_yaml.enable-security-generation=false
 ----
 ====
 
@@ -50,6 +54,14 @@ app:
           fieldPath: metadata.namespace
   serviceAccount:
     enabled: true
+
+  operator:
+    keycloak:
+      client:
+        enabled: true
+        spec:
+          kcConfig:
+            defaultClientScopes: [ ocx-pm:write ]
 
 # Values: JOSDK_WATCH_CURRENT, JOSDK_ALL_NAMESPACES or comma separated list of namespaces
 watchNamespaces: "JOSDK_WATCH_CURRENT"

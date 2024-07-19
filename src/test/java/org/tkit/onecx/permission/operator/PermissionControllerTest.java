@@ -26,7 +26,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class PermissionControllerTest extends AbstractTest {
 
-    final static Logger log = LoggerFactory.getLogger(PermissionControllerTest.class);
+    static final Logger log = LoggerFactory.getLogger(PermissionControllerTest.class);
 
     @Inject
     Operator operator;
@@ -147,8 +147,8 @@ class PermissionControllerTest extends AbstractTest {
                 .setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
         data.setSpec(m);
 
-        log.info("Creating test permission object: {}", data);
-        var exception = catchThrowableOfType(() -> client.resource(data).serverSideApply(), KubernetesClientException.class);
+        log.info("Updating test permission object: {}", data);
+        var exception = catchThrowableOfType(KubernetesClientException.class, () -> client.resource(data).serverSideApply());
         assertThat(exception).isNotNull();
 
     }
