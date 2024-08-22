@@ -3,7 +3,7 @@ kind: RoleBinding
 metadata:
   name: {{ .Release.Name }}-{{ .Values.app.name }}-role-binding
 roleRef:
-  kind: ClusterRole
+  kind: Role
   apiGroup: rbac.authorization.k8s.io
   name: {{ .Release.Name }}-{{ .Values.app.name }}-role
 subjects:
