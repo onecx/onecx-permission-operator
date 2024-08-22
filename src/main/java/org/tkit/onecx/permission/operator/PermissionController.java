@@ -11,7 +11,7 @@ import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
 
-@ControllerConfiguration(name = "permission", onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class)
+@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class)
 public class PermissionController implements Reconciler<Permission>, ErrorStatusHandler<Permission> {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);

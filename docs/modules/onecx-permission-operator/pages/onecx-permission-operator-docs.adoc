@@ -44,9 +44,6 @@ app:
   name: operator
   image:
     repository: "onecx/onecx-permission-operator"
-  env:
-    # See watchNamespaces
-    "QUARKUS_OPERATOR_SDK_CONTROLLERS_PERMISSION_NAMESPACES": "JOSDK_WATCH_CURRENT"
   envCustom:
     - name: KUBERNETES_NAMESPACE
       valueFrom:
@@ -58,6 +55,14 @@ app:
   operator:
     keycloak:
       client:
+        enabled: true
+        spec:
+          kcConfig:
+            defaultClientScopes: [ ocx-pm:write ]
+
+----
+
+nt:
         enabled: true
         spec:
           kcConfig:
