@@ -62,14 +62,3 @@ app:
 
 ----
 
-nt:
-        enabled: true
-        spec:
-          kcConfig:
-            defaultClientScopes: [ ocx-pm:write ]
-
-# Values: JOSDK_WATCH_CURRENT, JOSDK_ALL_NAMESPACES or comma separated list of namespaces
-watchNamespaces: "JOSDK_WATCH_CURRENT"
-
-----
-

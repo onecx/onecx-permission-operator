@@ -4,5 +4,7 @@ include::onecx-permission-operator-attributes.adoc[opts=optional]
 
 include::docs.adoc[opts=optional]
 
+=== Configuration
+include::onecx-permission-operator.adoc[opts=optional]
 
 include::onecx-permission-operator-docs.adoc[opts=optional]
