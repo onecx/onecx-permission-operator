@@ -8,6 +8,10 @@ include::onecx-permission-operator-attributes.adoc[opts=optional]
 ====
 [source,properties,subs=attributes+]
 ----
+quarkus.operator-sdk.controllers.permission.retry.max-attempts=10
+quarkus.operator-sdk.controllers.permission.retry.interval.initial=5000
+quarkus.operator-sdk.controllers.permission.retry.interval.multiplier=3
+quarkus.operator-sdk.controllers.permission.retry.interval.max=300000
 quarkus.kubernetes-client.devservices.override-kubeconfig=true
 %prod.quarkus.rest-client.permission_client.url=http://onecx-permission-svc:8080
 %prod.quarkus.rest-client.permission_client.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
