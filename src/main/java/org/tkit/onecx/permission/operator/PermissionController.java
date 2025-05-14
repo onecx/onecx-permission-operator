@@ -1,5 +1,8 @@
 package org.tkit.onecx.permission.operator;
 
+import java.util.Map;
+import java.util.Objects;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 
@@ -11,11 +14,7 @@ import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
 
-import java.util.Map;
-import java.util.Objects;
-
-@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class,
-generationAwareEventProcessing = false)
+@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class, generationAwareEventProcessing = false)
 public class PermissionController implements Reconciler<Permission>, ErrorStatusHandler<Permission> {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
@@ -82,10 +81,10 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
             String newValue = newAnnotations != null ? newAnnotations.get(TOUCH_ANNOTATION) : null;
             String oldValue = oldAnnotations != null ? oldAnnotations.get(TOUCH_ANNOTATION) : null;
 
-             boolean annotationChanged = !Objects.equals(newValue, oldValue);
-             boolean specChanged = !Objects.equals(newResource.getSpec(), oldResource.getSpec());
+            boolean annotationChanged = !Objects.equals(newValue, oldValue);
+            boolean specChanged = !Objects.equals(newResource.getSpec(), oldResource.getSpec());
 
-             return annotationChanged || specChanged;
+            return annotationChanged || specChanged;
         }
     }
 
