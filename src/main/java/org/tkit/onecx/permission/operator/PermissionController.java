@@ -85,12 +85,12 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
             return generationHasChanged(newResource, oldResource);
         }
 
-        private Boolean touchAnnotationChanged(Permission newResource, Permission oldResource) {
+        private boolean touchAnnotationChanged(Permission newResource, Permission oldResource) {
             return !Objects.equals(getTouchAnnotation(newResource),
                     getTouchAnnotation(oldResource));
         }
 
-        private Boolean generationHasChanged(Permission newResource, Permission oldResource) {
+        private boolean generationHasChanged(Permission newResource, Permission oldResource) {
             return !Objects.equals(newResource.getMetadata().getGeneration(),
                     oldResource.getMetadata().getGeneration());
         }
