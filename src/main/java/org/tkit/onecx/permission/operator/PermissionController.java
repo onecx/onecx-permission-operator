@@ -11,7 +11,11 @@ import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
 
-@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class)
+import java.util.Map;
+import java.util.Objects;
+
+@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class,
+generationAwareEventProcessing = false)
 public class PermissionController implements Reconciler<Permission>, ErrorStatusHandler<Permission> {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
@@ -68,9 +72,21 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
     public static class UpdateFilter implements OnUpdateFilter<Permission> {
 
+        private static final String TOUCH_ANNOTATION = "org.tkit.onecx.touchedAt";
+
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-            return newResource.getSpec() != null;
+            Map<String, String> newAnnotations = newResource.getMetadata().getAnnotations();
+            Map<String, String> oldAnnotations = oldResource.getMetadata().getAnnotations();
+
+            String newValue = newAnnotations != null ? newAnnotations.get(TOUCH_ANNOTATION) : null;
+            String oldValue = oldAnnotations != null ? oldAnnotations.get(TOUCH_ANNOTATION) : null;
+
+             boolean annotationChanged = !Objects.equals(newValue, oldValue);
+             boolean specChanged = !Objects.equals(newResource.getSpec(), oldResource.getSpec());
+
+             return annotationChanged || specChanged;
         }
     }
+
 }
