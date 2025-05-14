@@ -97,8 +97,7 @@ class PermissionControllerTest extends AbstractTest {
         m.setPermissions(p1);
 
         var data = new Permission();
-        data
-                .setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
+        data.setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
         data.setSpec(m);
 
         log.info("Creating test permission object: {}", data);
@@ -115,6 +114,47 @@ class PermissionControllerTest extends AbstractTest {
         client.resource(data).inNamespace(client.getNamespace())
                 .edit(s -> {
                     s.setSpec(null);
+                    return s;
+                });
+
+        await().pollDelay(4, SECONDS).untilAsserted(() -> {
+            PermissionStatus mfeStatus = client.resource(data).get().getStatus();
+            assertThat(mfeStatus).isNotNull();
+            assertThat(mfeStatus.getStatus()).isNotNull().isEqualTo(PermissionStatus.Status.UPDATED);
+        });
+    }
+
+    @Test
+    void productUpdateSameSpecTest() {
+
+        operator.start();
+
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        p1.put("r1", Map.of("a2", "d1"));
+
+        var m = new PermissionSpec();
+        m.setProductName("test1");
+        m.setAppId("test-3");
+        m.setPermissions(p1);
+
+        var data = new Permission();
+        data.setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
+        data.setSpec(m);
+
+        log.info("Creating test permission object: {}", data);
+        client.resource(data).serverSideApply();
+
+        log.info("Waiting 4 seconds and status muss be still null");
+
+        await().pollDelay(2, SECONDS).untilAsserted(() -> {
+            PermissionStatus mfeStatus = client.resource(data).get().getStatus();
+            assertThat(mfeStatus).isNotNull();
+            assertThat(mfeStatus.getStatus()).isNotNull().isEqualTo(PermissionStatus.Status.UPDATED);
+        });
+
+        client.resource(data).inNamespace(client.getNamespace())
+                .edit(s -> {
+                    s.getMetadata().getAnnotations().put("someAnnotation", "someAnnotation");
                     return s;
                 });
 
@@ -143,8 +183,7 @@ class PermissionControllerTest extends AbstractTest {
         m.setPermissions(p1);
 
         var data = new Permission();
-        data
-                .setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
+        data.setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
         data.setSpec(m);
 
         log.info("Updating test permission object: {}", data);
@@ -182,5 +221,46 @@ class PermissionControllerTest extends AbstractTest {
             assertThat(mfeStatus.getStatus()).isNotNull().isEqualTo(PermissionStatus.Status.ERROR);
         });
 
+    }
+
+    @Test
+    void productUpdateAnnotationTest() {
+
+        operator.start();
+
+        Map<String, Map<String, String>> p1 = new HashMap<>();
+        p1.put("r1", Map.of("a2", "d1"));
+
+        var m = new PermissionSpec();
+        m.setProductName("test1");
+        m.setAppId("test-3");
+        m.setPermissions(p1);
+
+        var data = new Permission();
+        data.setMetadata(new ObjectMetaBuilder().withName("to-update-spec").withNamespace(client.getNamespace()).build());
+        data.setSpec(m);
+
+        log.info("Creating test permission object: {}", data);
+        client.resource(data).serverSideApply();
+
+        log.info("Waiting 4 seconds and status muss be still null");
+
+        await().pollDelay(2, SECONDS).untilAsserted(() -> {
+            PermissionStatus mfeStatus = client.resource(data).get().getStatus();
+            assertThat(mfeStatus).isNotNull();
+            assertThat(mfeStatus.getStatus()).isNotNull().isEqualTo(PermissionStatus.Status.UPDATED);
+        });
+
+        client.resource(data).inNamespace(client.getNamespace())
+                .edit(s -> {
+                    s.getMetadata().getAnnotations().put("org.tkit.onecx.touchedAt", "someDate");
+                    return s;
+                });
+
+        await().pollDelay(4, SECONDS).untilAsserted(() -> {
+            PermissionStatus mfeStatus = client.resource(data).get().getStatus();
+            assertThat(mfeStatus).isNotNull();
+            assertThat(mfeStatus.getStatus()).isNotNull().isEqualTo(PermissionStatus.Status.UPDATED);
+        });
     }
 }

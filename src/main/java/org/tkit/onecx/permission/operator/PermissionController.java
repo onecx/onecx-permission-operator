@@ -1,6 +1,5 @@
 package org.tkit.onecx.permission.operator;
 
-import java.util.Map;
 import java.util.Objects;
 
 import jakarta.inject.Inject;
@@ -9,6 +8,9 @@ import jakarta.ws.rs.WebApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.onecx.permission.operator.client.PermissionService;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
@@ -45,7 +47,6 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
         log.info("Reconcile resource: {} appId: {}", permission.getMetadata().getName(), permission.getSpec().getAppId());
 
         int responseCode = service.updatePermission(permission);
-
         updateStatusPojo(permission, responseCode);
         log.info("Product '{}' reconciled - updating status", permission.getMetadata().getName());
         return UpdateControl.updateStatus(permission);
@@ -75,17 +76,25 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-            Map<String, String> newAnnotations = newResource.getMetadata().getAnnotations();
-            Map<String, String> oldAnnotations = oldResource.getMetadata().getAnnotations();
-
-            String newValue = newAnnotations != null ? newAnnotations.get(TOUCH_ANNOTATION) : null;
-            String oldValue = oldAnnotations != null ? oldAnnotations.get(TOUCH_ANNOTATION) : null;
-
-            boolean annotationChanged = !Objects.equals(newValue, oldValue);
-            boolean specChanged = !Objects.equals(newResource.getSpec(), oldResource.getSpec());
-
-            return annotationChanged || specChanged;
+            String newTouchValue = newResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION) != null
+                    ? newResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION)
+                    : null;
+            String oldTouchValue = oldResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION) != null
+                    ? oldResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION)
+                    : null;
+            boolean annotationChanged = !Objects.equals(newTouchValue, oldTouchValue);
+            boolean specChanged = !areSpecsEqual(newResource.getSpec(), oldResource.getSpec());
+            return newResource.getSpec() != null && (annotationChanged || specChanged);
         }
+
+        private static final ObjectMapper mapper = new ObjectMapper();
+
+        public static boolean areSpecsEqual(Object spec1, Object spec2) {
+            JsonNode tree1 = mapper.valueToTree(spec1);
+            JsonNode tree2 = mapper.valueToTree(spec2);
+            return tree1.equals(tree2);
+        }
+
     }
 
 }
