@@ -73,16 +73,30 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-            String newTouchValue = newResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION) != null
-                    ? newResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION)
-                    : null;
-            String oldTouchValue = oldResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION) != null
-                    ? oldResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION)
-                    : null;
-            boolean annotationChanged = !Objects.equals(newTouchValue, oldTouchValue);
-            boolean generationChanged = !Objects.equals(newResource.getMetadata().getGeneration(),
+
+            if (newResource.getSpec() == null) {
+                return false;
+            }
+
+            if (touchAnnotationChanged(newResource, oldResource)) {
+                return true;
+            }
+
+            return generationHasChanged(newResource, oldResource);
+        }
+
+        private Boolean touchAnnotationChanged(Permission newResource, Permission oldResource) {
+            return !Objects.equals(getTouchAnnotation(newResource),
+                    getTouchAnnotation(oldResource));
+        }
+
+        private Boolean generationHasChanged(Permission newResource, Permission oldResource) {
+            return !Objects.equals(newResource.getMetadata().getGeneration(),
                     oldResource.getMetadata().getGeneration());
-            return newResource.getSpec() != null && (annotationChanged || generationChanged);
+        }
+
+        private String getTouchAnnotation(Permission resource) {
+            return resource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION);
         }
     }
 
