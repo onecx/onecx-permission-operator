@@ -9,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.onecx.permission.operator.client.PermissionService;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
@@ -83,18 +80,10 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
                     ? oldResource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION)
                     : null;
             boolean annotationChanged = !Objects.equals(newTouchValue, oldTouchValue);
-            boolean specChanged = !areSpecsEqual(newResource.getSpec(), oldResource.getSpec());
-            return newResource.getSpec() != null && (annotationChanged || specChanged);
+            boolean generationChanged = !Objects.equals(newResource.getMetadata().getGeneration(),
+                    oldResource.getMetadata().getGeneration());
+            return newResource.getSpec() != null && (annotationChanged || generationChanged);
         }
-
-        private static final ObjectMapper mapper = new ObjectMapper();
-
-        public static boolean areSpecsEqual(Object spec1, Object spec2) {
-            JsonNode tree1 = mapper.valueToTree(spec1);
-            JsonNode tree2 = mapper.valueToTree(spec2);
-            return tree1.equals(tree2);
-        }
-
     }
 
 }
