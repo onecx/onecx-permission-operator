@@ -1,5 +1,7 @@
 package org.tkit.onecx.permission.operator;
 
+import java.util.Objects;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 
@@ -11,7 +13,7 @@ import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
 
-@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class)
+@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class, generationAwareEventProcessing = false)
 public class PermissionController implements Reconciler<Permission>, ErrorStatusHandler<Permission> {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
@@ -42,7 +44,6 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
         log.info("Reconcile resource: {} appId: {}", permission.getMetadata().getName(), permission.getSpec().getAppId());
 
         int responseCode = service.updatePermission(permission);
-
         updateStatusPojo(permission, responseCode);
         log.info("Product '{}' reconciled - updating status", permission.getMetadata().getName());
         return UpdateControl.updateStatus(permission);
@@ -68,9 +69,35 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
     public static class UpdateFilter implements OnUpdateFilter<Permission> {
 
+        private static final String TOUCH_ANNOTATION = "org.tkit.onecx.touchedAt";
+
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-            return newResource.getSpec() != null;
+
+            if (newResource.getSpec() == null) {
+                return false;
+            }
+
+            if (touchAnnotationChanged(newResource, oldResource)) {
+                return true;
+            }
+
+            return generationHasChanged(newResource, oldResource);
+        }
+
+        private boolean touchAnnotationChanged(Permission newResource, Permission oldResource) {
+            return !Objects.equals(getTouchAnnotation(newResource),
+                    getTouchAnnotation(oldResource));
+        }
+
+        private boolean generationHasChanged(Permission newResource, Permission oldResource) {
+            return !Objects.equals(newResource.getMetadata().getGeneration(),
+                    oldResource.getMetadata().getGeneration());
+        }
+
+        private String getTouchAnnotation(Permission resource) {
+            return resource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION);
         }
     }
+
 }
