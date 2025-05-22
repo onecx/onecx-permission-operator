@@ -2,9 +2,7 @@ package org.tkit.onecx.permission.operator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus;
-
-public class PermissionStatus extends ObservedGenerationAwareStatus {
+public class PermissionStatus {
 
     @JsonProperty("appId")
     private String appId;
