@@ -6,13 +6,15 @@ import jakarta.ws.rs.WebApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.onecx.permission.operator.client.PermissionService;
+import org.tkit.onecx.quarkus.operator.OperatorUtils;
 
+import io.javaoperatorsdk.operator.api.config.informer.Informer;
 import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnAddFilter;
 import io.javaoperatorsdk.operator.processing.event.source.filter.OnUpdateFilter;
 
-@ControllerConfiguration(name = "permission", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class)
-public class PermissionController implements Reconciler<Permission>, ErrorStatusHandler<Permission> {
+@ControllerConfiguration(name = "permission", generationAwareEventProcessing = false, informer = @Informer(name = "parameter", namespaces = Constants.WATCH_CURRENT_NAMESPACE, onAddFilter = PermissionController.AddFilter.class, onUpdateFilter = PermissionController.UpdateFilter.class))
+public class PermissionController implements Reconciler<Permission> {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
 
@@ -34,7 +36,7 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
         status.setStatus(PermissionStatus.Status.ERROR);
         status.setMessage(e.getMessage());
         permission.setStatus(status);
-        return ErrorStatusUpdateControl.updateStatus(permission);
+        return ErrorStatusUpdateControl.patchStatus(permission);
     }
 
     @Override
@@ -42,10 +44,9 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
         log.info("Reconcile resource: {} appId: {}", permission.getMetadata().getName(), permission.getSpec().getAppId());
 
         int responseCode = service.updatePermission(permission);
-
         updateStatusPojo(permission, responseCode);
         log.info("Product '{}' reconciled - updating status", permission.getMetadata().getName());
-        return UpdateControl.updateStatus(permission);
+        return UpdateControl.patchStatus(permission);
     }
 
     private void updateStatusPojo(Permission permission, int responseCode) {
@@ -62,7 +63,7 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
         @Override
         public boolean accept(Permission resource) {
-            return resource.getSpec() != null;
+            return OperatorUtils.shouldProcessAdd(resource);
         }
     }
 
@@ -70,7 +71,8 @@ public class PermissionController implements Reconciler<Permission>, ErrorStatus
 
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-            return newResource.getSpec() != null;
+            return OperatorUtils.shouldProcessUpdate(newResource, oldResource);
         }
     }
+
 }
