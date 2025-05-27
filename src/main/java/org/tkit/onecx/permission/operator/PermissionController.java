@@ -1,13 +1,12 @@
 package org.tkit.onecx.permission.operator;
 
-import java.util.Objects;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tkit.onecx.permission.operator.client.PermissionService;
+import org.tkit.onecx.quarkus.operator.OperatorUtils;
 
 import io.javaoperatorsdk.operator.api.config.informer.Informer;
 import io.javaoperatorsdk.operator.api.reconciler.*;
@@ -64,40 +63,15 @@ public class PermissionController implements Reconciler<Permission> {
 
         @Override
         public boolean accept(Permission resource) {
-            return resource.getSpec() != null;
+            return OperatorUtils.shouldProcessAdd(resource);
         }
     }
 
     public static class UpdateFilter implements OnUpdateFilter<Permission> {
 
-        private static final String TOUCH_ANNOTATION = "org.tkit.onecx.touchedAt";
-
         @Override
         public boolean accept(Permission newResource, Permission oldResource) {
-
-            if (newResource.getSpec() == null) {
-                return false;
-            }
-
-            if (touchAnnotationChanged(newResource, oldResource)) {
-                return true;
-            }
-
-            return generationHasChanged(newResource, oldResource);
-        }
-
-        private boolean touchAnnotationChanged(Permission newResource, Permission oldResource) {
-            return !Objects.equals(getTouchAnnotation(newResource),
-                    getTouchAnnotation(oldResource));
-        }
-
-        private boolean generationHasChanged(Permission newResource, Permission oldResource) {
-            return !Objects.equals(newResource.getMetadata().getGeneration(),
-                    oldResource.getMetadata().getGeneration());
-        }
-
-        private String getTouchAnnotation(Permission resource) {
-            return resource.getMetadata().getAnnotations().get(TOUCH_ANNOTATION);
+            return OperatorUtils.shouldProcessUpdate(newResource, oldResource);
         }
     }
 
