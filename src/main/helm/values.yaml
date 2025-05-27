@@ -17,3 +17,7 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-pm:write ]
+    microservice:
+      spec:
+        description: OneCX Permission Operator
+        name: OneCX Permission Operator
