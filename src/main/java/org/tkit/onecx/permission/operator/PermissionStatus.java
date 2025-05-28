@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PermissionStatus {
 
+    @JsonProperty("observedGeneration")
+    private Long observedGeneration;
+
     @JsonProperty("appId")
     private String appId;
 
@@ -56,4 +59,9 @@ public class PermissionStatus {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public Long getObservedGeneration() {
+        return observedGeneration;
+    }
+
 }
