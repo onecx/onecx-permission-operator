@@ -15,7 +15,7 @@ quarkus.operator-sdk.controllers.permission.retry.interval.max=300000
 quarkus.kubernetes-client.devservices.override-kubeconfig=true
 %prod.quarkus.rest-client.permission_client.url=http://onecx-permission-svc:8080
 %prod.quarkus.rest-client.permission_client.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 quarkus.operator-sdk.crd.validate=false
 quarkus.operator-sdk.helm.enabled=true
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
@@ -46,6 +46,8 @@ Default values
 ----
 app:
   name: operator
+  template:
+    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-permission-operator"
   envCustom:
@@ -55,7 +57,6 @@ app:
           fieldPath: metadata.namespace
   serviceAccount:
     enabled: true
-
   operator:
     keycloak:
       client:
