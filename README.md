@@ -1,2 +1,2 @@
 # onecx-permission-operator
-OneCx permission k8s operator
+OneCX Permission k8s Operator
