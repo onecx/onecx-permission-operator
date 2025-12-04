@@ -1,1 +1,0 @@
-* xref:onecx-permission-operator:index.adoc[Permission Operator]
