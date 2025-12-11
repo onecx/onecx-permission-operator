@@ -26,7 +26,7 @@ Environment variable: `+++ONECX_PERMISSION_OPERATOR_LEADER_ELECTION_LEASE_NAME++
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`onecx-permission-operator-lease`
+|`+++onecx-permission-operator-lease+++`
 
 |===
 
