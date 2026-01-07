@@ -68,7 +68,3 @@ app:
         name: OneCX Permission Operator
 ----
 
-        description: OneCX Permission Operator
-        name: OneCX Permission Operator
-----
-
