@@ -7,7 +7,7 @@ h|[.header-title]##Configuration property##
 h|Type
 h|Default
 
-a| [[onecx-permission-operator_onecx-permission-operator-leader-election-lease-name]] [.property-path]##link:#onecx-permission-operator_onecx-permission-operator-leader-election-lease-name[`onecx.permission.operator.leader-election.lease-name`]##
+a| [[onecx-permission-operator_onecx-permission-operator-leader-election-lease-name]] [.property-path]##link:#onecx-permission-operator_onecx-permission-operator-leader-election-lease-name[`+++onecx.permission.operator.leader-election.lease-name+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++onecx.permission.operator.leader-election.lease-name+++[]
 endif::add-copy-button-to-config-props[]
