@@ -35,7 +35,7 @@ class PermissionControllerTest extends AbstractTest {
     KubernetesClient client;
 
     @BeforeAll
-    public static void init() {
+    static void init() {
         Awaitility.setDefaultPollDelay(2, SECONDS);
         Awaitility.setDefaultPollInterval(2, SECONDS);
         Awaitility.setDefaultTimeout(10, SECONDS);
